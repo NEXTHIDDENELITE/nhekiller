@@ -116,7 +116,7 @@
             -webkit-backdrop-filter: blur(20px);
             width: 440px;
             border-radius: 24px;
-            padding: 35px 30px;
+            padding: 40px 30px;
             text-align: center;
             position: relative;
             box-shadow: 0 0 50px rgba(0, 229, 255, 0.1), inset 0 0 30px rgba(255, 255, 255, 0.02);
@@ -149,7 +149,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             box-shadow: 0 0 15px rgba(255, 0, 60, 0.3);
             animation: floatText 2s ease-in-out infinite alternate;
         }
@@ -232,87 +232,18 @@
         }
         .profile-location i { color: #ff003c; margin-right: 5px; }
 
-        /* সাবটাইটেল (Gaming tools maker) */
+        /* সাবটাইটেল */
         .profile-subtitle {
             font-size: 0.8rem;
             color: #00e5ff;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: 25px;
+            margin-bottom: 35px;
             font-weight: bold;
             text-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
         }
 
-        /* বাটন কন্টেইনার */
-        .dev-wrapper {
-            position: relative;
-            width: 100%;
-            margin-bottom: 25px;
-        }
-
-        .dev-trigger-btn {
-            background: transparent;
-            border: 1px solid #00e5ff;
-            color: #00e5ff;
-            padding: 12px 35px;
-            font-size: 0.9rem;
-            font-weight: 800;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
-        }
-
-        .dev-trigger-btn:hover {
-            background: #00e5ff;
-            color: #000;
-            box-shadow: 0 0 30px rgba(0, 229, 255, 0.6);
-            transform: scale(1.05);
-        }
-
-        /* বৈশিষ্ট্য প্যানেল (Absolute Position) */
-        .features-panel {
-            position: absolute;
-            top: 55px;
-            left: 0;
-            width: 100%;
-            background: rgba(6, 6, 11, 0.95);
-            border: 1px solid rgba(0, 229, 255, 0.2);
-            backdrop-filter: blur(15px);
-            border-radius: 14px;
-            padding: 0 15px;
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 5;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .features-panel.active {
-            max-height: 200px;
-            opacity: 1;
-            padding: 20px 15px;
-        }
-
-        .feature-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-        }
-        .feature-row:last-child { margin-bottom: 0; }
-        .feature-label { color: #aaa; text-transform: uppercase; }
-        .feature-value { color: #00e5ff; font-weight: bold; }
-
-        .bar-bg { width: 100px; height: 6px; background: #222; border-radius: 3px; overflow: hidden; }
-        .bar-fill { height: 100%; background: #ff003c; box-shadow: 0 0 10px #ff003c; }
-
-        /* স্ক্রিনের নিচে ডানদিকের কোনায় গ্লোয়িং ভিজিটর উইজেট */
+        /* গ্লোয়িং ভিজিটর উইজেট */
         .floating-visitor-badge {
             position: absolute;
             bottom: 25px;
@@ -343,18 +274,18 @@
             letter-spacing: 1px;
         }
 
-        /* সোশ্যাল মিডিয়া */
+        /* সোশ্যাল মিডিয়া সেকশন */
         .social-icons-row {
             display: flex;
             justify-content: center;
-            gap: 25px;
+            gap: 30px;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 25px;
+            padding-top: 30px;
         }
 
         .icon-btn {
-            width: 52px;
-            height: 52px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -362,7 +293,7 @@
             justify-content: center;
             align-items: center;
             color: #fff;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             text-decoration: none;
             transition: all 0.3s ease;
         }
@@ -370,7 +301,6 @@
         .icon-btn:hover { transform: translateY(-5px); }
         .icon-btn.youtube:hover { background: #ff0000; border-color: #ff0000; box-shadow: 0 0 25px #ff0000; }
         .icon-btn.discord:hover { background: #5865F2; border-color: #5865F2; box-shadow: 0 0 25px #5865F2; }
-        .icon-btn.facebook:hover { background: #1877F2; border-color: #1877F2; box-shadow: 0 0 25px #1877F2; }
     </style>
 </head>
 <body>
@@ -409,40 +339,12 @@
             <i class="fa-solid fa-gamepad"></i> Gaming tools maker
         </div>
 
-        <div class="dev-wrapper">
-            <button class="dev-trigger-btn" onclick="toggleFeatures()">
-                <i class="fa-solid fa-sliders"></i> Core Stats
-            </button>
-
-            <div class="features-panel" id="features">
-                <div class="feature-row">
-                    <span class="feature-label">Backend Security</span>
-                    <div class="bar-bg"><div class="bar-fill" style="width: 95%;"></div></div>
-                </div>
-                <div class="feature-row">
-                    <span class="feature-label">Main Core</span>
-                    <span class="feature-value">NHE Framework</span>
-                </div>
-                <div class="feature-row">
-                    <span class="feature-label">System Rank</span>
-                    <span class="feature-value" style="color: #ff003c; text-shadow: 0 0 10px #ff003c;">Elite Level</span>
-                </div>
-                <div class="feature-row">
-                    <span class="feature-label">Database Control</span>
-                    <div class="bar-bg"><div class="bar-fill" style="width: 90%; background: #00e5ff; box-shadow: 0 0 10px #00e5ff;"></div></div>
-                </div>
-            </div>
-        </div>
-
         <div class="social-icons-row">
-            <a href="#" target="_blank" class="icon-btn youtube" title="YouTube">
+            <a href="https://www.youtube.com/@NextHiddenElite" target="_blank" class="icon-btn youtube" title="YouTube">
                 <i class="fa-brands fa-youtube"></i>
             </a>
-            <a href="#" target="_blank" class="icon-btn discord" title="Discord">
+            <a href="https://discord.gg/QWMpcrHSF" target="_blank" class="icon-btn discord" title="Discord">
                 <i class="fa-brands fa-discord"></i>
-            </a>
-            <a href="#" target="_blank" class="icon-btn facebook" title="Facebook">
-                <i class="fa-brands fa-facebook-f"></i>
             </a>
         </div>
 
@@ -454,14 +356,11 @@
     </div>
 
     <script>
-        function toggleFeatures() {
-            const panel = document.getElementById('features');
-            panel.classList.toggle('active');
-        }
-
         const video = document.getElementById('bg-video');
         const audioBtn = document.getElementById('audio-toggle');
         const audioIcon = document.getElementById('audio-icon');
+
+        video.muted = true;
 
         function toggleAudio() {
             if (video.muted) {
@@ -470,6 +369,7 @@
                 audioBtn.style.borderColor = "#00e5ff";
                 audioBtn.style.color = "#00e5ff";
                 audioBtn.style.boxShadow = "0 0 25px rgba(0, 229, 255, 0.8)";
+                video.play().catch(e => console.log("Audio play allowed"));
             } else {
                 video.muted = true;
                 audioIcon.className = "fa-solid fa-volume-xmark";
@@ -497,17 +397,13 @@
             const db = firebase.database();
             const totalRef = db.ref('stats/unique_visits');
 
-            // ব্রাউজার মেমোরি চেক করা (আগে এসেছে কিনা)
             if (!localStorage.getItem('nhe_dashboard_visited')) {
-                // নতুন ইউজার হলে ডাটাবেসে +1 করবে
                 totalRef.transaction((currentValue) => {
                     return (currentValue || 0) + 1;
                 });
-                // ব্রাউজারে টোকেন সেট করে রাখা
                 localStorage.setItem('nhe_dashboard_visited', 'true');
             }
             
-            // ডাটাবেস থেকে রিয়াল-টাইম ইউনিক ভিউ সংখ্যা স্ক্রিনে শো করা
             totalRef.on('value', (snapshot) => {
                 document.getElementById('total-count').innerText = snapshot.val() || 0;
             });
