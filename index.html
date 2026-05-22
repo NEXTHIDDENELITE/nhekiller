@@ -1,1 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KILLER PREMIUM DASHBOARD</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Orbitron', 'Segoe UI', Roboto, sans-serif;
+        }
 
+        body {
+            background: #030305;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ব্যাকগ্রাউন্ড ভিডিওর সেটিংস */
+        #bg-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            opacity: 0.5;
+        }
+
+        /* ভিডিওর ওপর সাই-ফাই গ্রিড ওভারলে */
+        .video-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(5, 5, 10, 0.8)), 
+                        radial-gradient(circle, transparent 40%, #000 100%);
+            z-index: -1;
+        }
+
+        /* টপ নেভিগেশন বার */
+        .top-nav-bar {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            display: flex;
+            z-index: 10;
+        }
+
+        .nav-link {
+            background: rgba(10, 10, 15, 0.6);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            color: #00e5ff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            background: #00e5ff;
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* স্পিকার কন্ট্রোল বাটন */
+        .audio-control {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(10, 10, 15, 0.8);
+            border: 2px solid #ff003c;
+            color: #ff003c;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.3rem;
+            box-shadow: 0 0 15px rgba(255, 0, 60, 0.4);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .audio-control:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 0 25px rgba(255, 0, 60, 0.8);
+        }
+
+        /* ড্যাশবোর্ড ফ্রেম */
+        .dashboard-panel {
+            background: rgba(6, 6, 9, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            width: 440px;
+            border-radius: 24px;
+            padding: 35px 30px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0, 229, 255, 0.1), inset 0 0 30px rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            margin-top: 20px;
+        }
+
+        .dashboard-panel::before, .dashboard-panel::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00e5ff;
+        }
+        .dashboard-panel::before { top: 15px; left: 15px; border-right: 0; border-bottom: 0; }
+        .dashboard-panel::after { bottom: 15px; right: 15px; border-left: 0; border-top: 0; }
+
+        /* OWNER OF NHE স্পিচ বাবল */
+        .speech-bubble {
+            position: relative;
+            background: rgba(255, 0, 60, 0.1);
+            border: 1px solid #ff003c;
+            color: #ff003c;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 0 15px rgba(255, 0, 60, 0.3);
+            animation: floatText 2s ease-in-out infinite alternate;
+        }
+
+        .speech-bubble i.fa-crown {
+            color: #ffea00;
+            text-shadow: 0 0 10px #ffea00;
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 10px;
+            height: 10px;
+            background: #060609;
+            border-right: 1px solid #ff003c;
+            border-bottom: 1px solid #ff003c;
+        }
+
+        @keyframes floatText {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-5px); }
+        }
+
+        /* প্রোফাইল ইমেজ */
+        .avatar-container {
+            width: 135px;
+            height: 135px;
+            margin: 0 auto 15px;
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid #00e5ff;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-container::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -150%;
+            width: 50%;
+            height: 200%;
+            background: linear-gradient(to right, transparent, rgba(0, 229, 255, 0.7), transparent);
+            transform: rotate(30deg);
+            animation: sweep 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes sweep {
+            0% { left: -150%; }
+            50%, 100% { left: 150%; }
+        }
+
+        /* নাম ও লোকেশন */
+        .profile-name {
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            background: linear-gradient(45deg, #fff, #00e5ff, #ff003c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+        
+        .profile-location {
+            font-size: 0.85rem;
+            color: #888;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        .profile-location i { color: #ff003c; margin-right: 5px; }
+
+        /* সাবটাইটেল (Gaming tools maker) */
+        .profile-subtitle {
+            font-size: 0.8rem;
+            color: #00e5ff;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+        }
+
+        /* বাটন কন্টেইনার */
+        .dev-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 25px;
+        }
+
+        .dev-trigger-btn {
+            background: transparent;
+            border: 1px solid #00e5ff;
+            color: #00e5ff;
+            padding: 12px 35px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
+        }
+
+        .dev-trigger-btn:hover {
+            background: #00e5ff;
+            color: #000;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.6);
+            transform: scale(1.05);
+        }
+
+        /* বৈশিষ্ট্য প্যানেল (Absolute Position) */
+        .features-panel {
+            position: absolute;
+            top: 55px;
+            left: 0;
+            width: 100%;
+            background: rgba(6, 6, 11, 0.95);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border-radius: 14px;
+            padding: 0 15px;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 5;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .features-panel.active {
+            max-height: 200px;
+            opacity: 1;
+            padding: 20px 15px;
+        }
+
+        .feature-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+        .feature-row:last-child { margin-bottom: 0; }
+        .feature-label { color: #aaa; text-transform: uppercase; }
+        .feature-value { color: #00e5ff; font-weight: bold; }
+
+        .bar-bg { width: 100px; height: 6px; background: #222; border-radius: 3px; overflow: hidden; }
+        .bar-fill { height: 100%; background: #ff003c; box-shadow: 0 0 10px #ff003c; }
+
+        /* স্ক্রিনের নিচে ডানদিকের কোনায় গ্লোয়িং ভিজিটর উইজেট */
+        .floating-visitor-badge {
+            position: absolute;
+            bottom: 25px;
+            right: 25px;
+            background: rgba(10, 10, 15, 0.8);
+            border: 1px solid rgba(0, 229, 255, 0.4);
+            padding: 10px 15px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+            z-index: 10;
+        }
+
+        .floating-visitor-badge i {
+            color: #00e5ff;
+            font-size: 1.1rem;
+            text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+        }
+
+        .floating-visitor-badge span {
+            font-size: 0.9rem;
+            font-weight: bold;
+            font-family: 'Orbitron', monospace;
+            color: #00e5ff;
+            text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+            letter-spacing: 1px;
+        }
+
+        /* সোশ্যাল মিডিয়া */
+        .social-icons-row {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 25px;
+        }
+
+        .icon-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 1.4rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .icon-btn:hover { transform: translateY(-5px); }
+        .icon-btn.youtube:hover { background: #ff0000; border-color: #ff0000; box-shadow: 0 0 25px #ff0000; }
+        .icon-btn.discord:hover { background: #5865F2; border-color: #5865F2; box-shadow: 0 0 25px #5865F2; }
+        .icon-btn.facebook:hover { background: #1877F2; border-color: #1877F2; box-shadow: 0 0 25px #1877F2; }
+    </style>
+</head>
+<body>
+
+    <video autoplay loop muted playsinline id="bg-video">
+        <source src="banner.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
+
+    <nav class="top-nav-bar">
+        <a href="https://nexthiddenelite.github.io/NHE/" target="_blank" class="nav-link">
+            <i class="fa-solid fa-globe"></i> NHE Official
+        </a>
+    </nav>
+
+    <div class="audio-control" id="audio-toggle" onclick="toggleAudio()">
+        <i class="fa-solid fa-volume-xmark" id="audio-icon"></i>
+    </div>
+
+    <div class="dashboard-panel">
+        
+        <div class="speech-bubble">
+            <i class="fa-solid fa-crown"></i> Owner of NHE <i class="fa-solid fa-crown"></i>
+        </div>
+        
+        <div class="avatar-container">
+            <img src="killertop.jpeg" alt="KILLER" class="avatar">
+        </div>
+
+        <h1 class="profile-name">KILLER</h1>
+        <div class="profile-location">
+            <i class="fa-solid fa-location-dot"></i> Bangladesh
+        </div>
+
+        <div class="profile-subtitle">
+            <i class="fa-solid fa-gamepad"></i> Gaming tools maker
+        </div>
+
+        <div class="dev-wrapper">
+            <button class="dev-trigger-btn" onclick="toggleFeatures()">
+                <i class="fa-solid fa-sliders"></i> Core Stats
+            </button>
+
+            <div class="features-panel" id="features">
+                <div class="feature-row">
+                    <span class="feature-label">Backend Security</span>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 95%;"></div></div>
+                </div>
+                <div class="feature-row">
+                    <span class="feature-label">Main Core</span>
+                    <span class="feature-value">NHE Framework</span>
+                </div>
+                <div class="feature-row">
+                    <span class="feature-label">System Rank</span>
+                    <span class="feature-value" style="color: #ff003c; text-shadow: 0 0 10px #ff003c;">Elite Level</span>
+                </div>
+                <div class="feature-row">
+                    <span class="feature-label">Database Control</span>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 90%; background: #00e5ff; box-shadow: 0 0 10px #00e5ff;"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="social-icons-row">
+            <a href="#" target="_blank" class="icon-btn youtube" title="YouTube">
+                <i class="fa-brands fa-youtube"></i>
+            </a>
+            <a href="#" target="_blank" class="icon-btn discord" title="Discord">
+                <i class="fa-brands fa-discord"></i>
+            </a>
+            <a href="#" target="_blank" class="icon-btn facebook" title="Facebook">
+                <i class="fa-brands fa-facebook-f"></i>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="floating-visitor-badge">
+        <i class="fa-solid fa-eye"></i>
+        <span id="total-count">0</span>
+    </div>
+
+    <script>
+        function toggleFeatures() {
+            const panel = document.getElementById('features');
+            panel.classList.toggle('active');
+        }
+
+        const video = document.getElementById('bg-video');
+        const audioBtn = document.getElementById('audio-toggle');
+        const audioIcon = document.getElementById('audio-icon');
+
+        function toggleAudio() {
+            if (video.muted) {
+                video.muted = false;
+                audioIcon.className = "fa-solid fa-volume-high";
+                audioBtn.style.borderColor = "#00e5ff";
+                audioBtn.style.color = "#00e5ff";
+                audioBtn.style.boxShadow = "0 0 25px rgba(0, 229, 255, 0.8)";
+            } else {
+                video.muted = true;
+                audioIcon.className = "fa-solid fa-volume-xmark";
+                audioBtn.style.borderColor = "#ff003c";
+                audioBtn.style.color = "#ff003c";
+                audioBtn.style.boxShadow = "0 0 15px rgba(255, 0, 60, 0.4)";
+            }
+        }
+
+        // ----------------------------------------------------
+        // FIREBASE UNIQUE VISITS ENGINE (1 PERSON = 1 VIEW)
+        // ----------------------------------------------------
+        const firebaseConfig = {
+            apiKey: "AIzaSyDUm0ZoK89NQ2XM09MpWtGaJ53jIKj-zPw",
+            authDomain: "killer-dashboard.firebaseapp.com",
+            databaseURL: "https://killer-dashboard-default-rtdb.firebaseio.com",
+            projectId: "killer-dashboard",
+            storageBucket: "killer-dashboard.firebasestorage.app",
+            messagingSenderId: "233972175214",
+            appId: "1:233972175214:web:cb21ba2ec70d062067f17f"
+        };
+
+        try {
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.database();
+            const totalRef = db.ref('stats/unique_visits');
+
+            // ব্রাউজার মেমোরি চেক করা (আগে এসেছে কিনা)
+            if (!localStorage.getItem('nhe_dashboard_visited')) {
+                // নতুন ইউজার হলে ডাটাবেসে +1 করবে
+                totalRef.transaction((currentValue) => {
+                    return (currentValue || 0) + 1;
+                });
+                // ব্রাউজারে টোকেন সেট করে রাখা
+                localStorage.setItem('nhe_dashboard_visited', 'true');
+            }
+            
+            // ডাটাবেস থেকে রিয়াল-টাইম ইউনিক ভিউ সংখ্যা স্ক্রিনে শো করা
+            totalRef.on('value', (snapshot) => {
+                document.getElementById('total-count').innerText = snapshot.val() || 0;
+            });
+        } catch (error) {
+            console.error("Firebase implementation error: ", error);
+            document.getElementById('total-count').innerText = "ERROR";
+        }
+    </script>
+</body>
+</html>
